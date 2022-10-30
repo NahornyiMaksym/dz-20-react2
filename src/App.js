@@ -7,17 +7,29 @@ import React from 'react';
 import './App.css';
 import myImg from './images/myImg.jpg'
 import classImg from './images/classImag.jpg'
+import cat from './images/cat.jpg'
 
 
+import {
+    Route,
+    BrowserRouter,
+    Routes,
+    Link,
+    Navigate
+} from "react-router-dom";
+
+
+import RouteLinks from "./dz-21-components";
+import {CardsWraper, Clock, HelloPage} from "./dz-21-components";
 
 const dateFormat = function () { // Функция для получения даты в формате дд/мм/гггг, которую передаем в пропсы классового компонента
 
     const date = new Date();
     const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-    const month = date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth();
+    const month = date.getMonth()+1  < 10 ? '0' + date.getMonth() : date.getMonth()+1;
     const year = date.getFullYear();
-
-    return `Date - ${day}/${month}/${year}`
+    console.log(month)
+    return  `Date - ${day}/${month}/${year}`
 }
 
 
@@ -31,7 +43,7 @@ function GratingFunction(props) { // Функциональный компоне
 }
 
 
-function MyButton (props) { // Кнопка - принимает в себя слушатель и стиль через пропсы, добавлю для практики в классовый компонент
+function MyButton(props) { // Кнопка - принимает в себя слушатель и стиль через пропсы, добавлю для практики в классовый компонент
     return (
         <button className={`button ${props.style}`} onClick={props.onClick}>{props.children}</button>
     )
@@ -65,12 +77,12 @@ class GratingClass extends React.Component { // классовый компон�
             <>
                 {this.state.showComponent ? <div className={'gratingContainer topBorder'}>
 
-                    <MyButton
-                        key={'MyButton'}
-                        onClick={this.onCloseClick}>
+                        <MyButton
+                            key={'MyButton'}
+                            onClick={this.onCloseClick}>
 
-                        Close Class Component
-                    </MyButton>
+                            Close Class Component
+                        </MyButton>
 
                         <img className={'gratingImg'} src={this.props.classImage} alt={'builder'}/>
                         <p>{this.props.children}</p>
@@ -94,22 +106,59 @@ class GratingClass extends React.Component { // классовый компон�
 
 
 function App() {
+
+
     return (
+
         <>
-            <GratingFunction
-                key={`grating`}
-                image={myImg}
-                grating={'Hello, I\'m not the best picture from function component!)'}
-            />
+            <BrowserRouter>
 
-            <GratingClass
-                key={`classGrating`}
-                classImage={classImg}
-                date={dateFormat()}
-            >
+                <RouteLinks/>
 
-                Some Builder
-            </GratingClass>
+                <Routes>
+
+                    <Route path="/" element={
+                        <>
+                            <h1>You are on Home Page</h1>
+
+                            <GratingFunction
+                                key={`grating`}
+                                image={myImg}
+                                grating={'Hello, I\'m not the best picture from function component!)'}
+                            />
+
+                            <GratingClass
+                                key={`classGrating`}
+                                classImage={classImg}
+                                date={dateFormat()}
+                            >
+
+                                Some Builder
+                            </GratingClass>
+
+                        </>
+
+                    }/>
+
+
+                    <Route path="cards" element={
+                        <>
+                            <h1>You are on Cards Page</h1>
+                            <CardsWraper/>
+                        </>
+                    }/>
+
+                    <Route path="helloPage" element={
+                        <>
+                            <h1>You are on Hello Page</h1>
+                            <HelloPage
+                                key={'helloComponent'}
+                                image={cat}
+                            >Hello! It's {<Clock/>} o'clock =)</HelloPage>
+                        </>
+                    }/>
+                </Routes>
+            </BrowserRouter>
         </>
     );
 }
